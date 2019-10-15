@@ -17,7 +17,7 @@ function updateBullets (state) {
     })
   })
 
-  const bulletSpeed = 5
+  const bulletSpeed = 7
 
   return bullets.map(({y, ...bullet}) => ({...bullet, y: y - bulletSpeed})).filter(({y}) => y > 0)
 }
