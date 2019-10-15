@@ -26,7 +26,7 @@ function updateShooter (state) {
 
 function createBullet (state) {
   return {
-    x: state.shooter.x + (15 / 2),
+    x: state.shooter.x + (25 / 2),
     y: state.shooter.y + 1,
   }
 }

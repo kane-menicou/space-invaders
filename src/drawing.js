@@ -1,36 +1,42 @@
 import alienImageSource from './alien.png'
+import shooterImageSource from './shooter.png'
 
 const alienImage = new Image()
 alienImage.src = alienImageSource
 
+const shooterImage = new Image()
+shooterImage.src = shooterImageSource
+
 export default function drawState (state) {
   const canvas = document.getElementById('gameCanvas')
+  const context = canvas.getContext('2d')
 
   // Clear old drawings
-  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-
-  const shooter = canvas.getContext('2d')
+  context.clearRect(0, 0, canvas.width, canvas.height)
 
   // Draw shooter
-  shooter.beginPath()
-  shooter.rect(state.shooter.x, state.shooter.y, 20, 50)
-  shooter.fillStyle = '#0095DD'
-  shooter.fill()
-  shooter.closePath()
+  context.beginPath()
+  context.drawImage(shooterImage, state.shooter.x, state.shooter.y, 25, 25)
+
+  context.save()
+  context.restore()
 
   state.aliens.objects.map(({x, y}) => {
-    const alien = canvas.getContext('2d')
-
-    alien.drawImage(alienImage, x, y, 25, 25)
+    context.drawImage(alienImage, x, y, 25, 25)
   })
+
+  context.save()
+  context.restore()
 
   state.bullets.map(({x, y}) => {
-    const bullet = canvas.getContext('2d')
-    bullet.rect(x, y, 5, 15)
-    bullet.fillStyle = '#0095DD'
-    bullet.fill()
-    bullet.closePath()
+    context.rect(x, y, 2, 10)
+    context.fillStyle = '#d8222c'
+    context.fill()
+    context.closePath()
   })
+
+  context.save()
+  context.restore()
 
   document.getElementById('score').innerText = state.score
 }
