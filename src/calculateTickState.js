@@ -74,8 +74,8 @@ function updateAlienAndScore (state) {
   let newScore = score;
   state.aliens.objects.forEach((alien, key) => {
     state.bullets.forEach((bullet) => {
-      const yInRange = (bullet.y - 5) < alien.y && (bullet.y + 5) > alien.y
-      const xInRange = (bullet.x - 10) < alien.x && (bullet.x + 10) > alien.x
+      const yInRange = (bullet.y - 25) < alien.y && (bullet.y + 25) > alien.y
+      const xInRange = (bullet.x - 25) < alien.x && (bullet.x + 25) > alien.x
 
       if (xInRange && yInRange) {
         delete objects[key]
