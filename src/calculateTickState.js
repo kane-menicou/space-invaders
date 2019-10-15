@@ -67,8 +67,8 @@ function updateAlienAndScore (state) {
   const {canvas, score} = state
   const {isTravelingLeft, objects} = state.aliens
 
-  const someHaveReachedRight = objects.some(({x}) => x === (canvas.width - 20))
-  const someHaveReachedLeft = objects.some(({x}) => x === 0)
+  const someHaveReachedRight = objects.some(({x}) => x >= (canvas.width - 20))
+  const someHaveReachedLeft = objects.some(({x}) => x <= 0)
 
   const updatedIsTravelingLeft = (() => {
     if (isTravelingLeft && someHaveReachedLeft) {
@@ -92,14 +92,17 @@ function updateAlienAndScore (state) {
     })
   })
 
+  const countExponent = ((objects.length - 60) * -1) / 100
+  const alienSpeed = Math.pow(6, countExponent)
+
   return {
     score: newScore,
     aliens: {
       ...state.aliens,
       isTravelingLeft: updatedIsTravelingLeft,
-      objects: objects.map(({y, x}) => ({
-        y: someHaveReachedRight || someHaveReachedLeft ? y + 15 : y,
-        x: isTravelingLeft ? x - 1 : x + 1
+      objects: objects.filter(val => val !== undefined).map(({y, x}) => ({
+        y: someHaveReachedRight || someHaveReachedLeft ? y + 7 : y,
+        x: isTravelingLeft ? x - alienSpeed : x + alienSpeed
       }))
     }
   }
