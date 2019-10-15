@@ -1,5 +1,5 @@
 # Space Invaders
-A space invaders clone wrote in using the HTML canvas using vanilla JS.
+A space invaders clone wrote using the HTML canvas and vanilla JS.
 
 ## Up and running
 1) Clone the repository.
