@@ -92,7 +92,7 @@ function updateAlienAndScore (state) {
     })
   })
 
-  const countExponent = ((objects.length - 60) * -1) / 100
+  const countExponent = ((60 - objects.length)) / 100
   const alienSpeed = Math.pow(6, countExponent)
 
   return {
