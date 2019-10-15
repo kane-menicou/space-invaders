@@ -1,10 +1,10 @@
 {
-  "name": "browser-game-learning",
+  "name": "space-invaders",
   "version": "1.0.0",
-  "description": "Shoddy browser games",
+  "description": "Space Invaders",
   "main": "./src/index.js",
   "author": "Kane Menicou",
-  "license": "Proprietary",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.6.0",
