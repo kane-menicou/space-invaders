@@ -17,6 +17,7 @@ import drawState from './drawing'
       width: canvas.width,
       height: canvas.height,
     },
+    spaceLocked: false,
     bullets: [],
     aliens: {
       isTravelingLeft: false,

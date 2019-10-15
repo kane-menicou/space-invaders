@@ -1,11 +1,11 @@
-function cloneObject(src) {
-  return JSON.parse(JSON.stringify(src));
+function cloneObject (src) {
+  return JSON.parse(JSON.stringify(src))
 }
 
 function updateBullets (state) {
   const bullets = cloneObject(state.bullets)
 
-  if (state.pressedKeys.indexOf(' ') !== -1) {
+  if (state.pressedKeys.indexOf(' ') !== -1 && !state.spaceLocked) {
     bullets.push(createBullet(state))
   }
 
@@ -56,14 +56,6 @@ function moveShooterX (state, by) {
   }
 }
 
-function updatePressedKeys (state) {
-  const {pressedKeys} = state
-
-  return pressedKeys.filter(check => {
-    return check !== " "
-  })
-}
-
 function bulletHasHit (alien, bullet) {
   const yInRange = (bullet.y - 15) < alien.y && (bullet.y + 15) > alien.y
   const xInRange = (bullet.x - 15) < alien.x && (bullet.x + 15) > alien.x
@@ -90,7 +82,7 @@ function updateAlienAndScore (state) {
     return isTravelingLeft
   })()
 
-  let newScore = score;
+  let newScore = score
   state.aliens.objects.forEach((alien, key) => {
     state.bullets.forEach((bullet) => {
       if (bulletHasHit(alien, bullet)) {
@@ -113,16 +105,20 @@ function updateAlienAndScore (state) {
   }
 }
 
+function updateSpaceLocked ({pressedKeys}) {
+  return pressedKeys.indexOf(' ') !== -1
+}
+
 export default function calculateTickState (state) {
   const bullets = updateBullets(state)
   const shooter = updateShooter(state)
-  const pressedKeys = updatePressedKeys(state)
+  const spaceLocked = updateSpaceLocked(state)
   const {aliens, score} = updateAlienAndScore(state)
 
   return {
     ...state,
     shooter,
-    pressedKeys,
+    spaceLocked,
     bullets,
     aliens,
     score
