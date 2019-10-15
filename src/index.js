@@ -22,13 +22,13 @@ import drawState from './drawing'
       isTravelingLeft: false,
       objects: [
         { x: 1, y: 1},
-        { x: 20, y: 1},
-        { x: 40, y: 1},
-        { x: 60, y: 1},
-        { x: 80, y: 1},
-        { x: 100, y: 1},
-        { x: 120, y: 1},
-        { x: 140, y: 1},
+        { x: 30, y: 1},
+        { x: 50, y: 1},
+        { x: 70, y: 1},
+        { x: 90, y: 1},
+        { x: 110, y: 1},
+        { x: 130, y: 1},
+        { x: 150, y: 1},
       ]
     }
   }

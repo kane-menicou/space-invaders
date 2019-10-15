@@ -1,3 +1,8 @@
+import alienImageSource from './alien.png'
+
+const alienImage = new Image()
+alienImage.src = alienImageSource
+
 export default function drawState (state) {
   const canvas = document.getElementById('gameCanvas')
 
@@ -15,10 +20,8 @@ export default function drawState (state) {
 
   state.aliens.objects.map(({x, y}) => {
     const alien = canvas.getContext('2d')
-    alien.rect(x, y, 15, 15)
-    alien.fillStyle = '#0095DD'
-    alien.fill()
-    alien.closePath()
+
+    alien.drawImage(alienImage, x, y, 25, 25)
   })
 
   state.bullets.map(({x, y}) => {
