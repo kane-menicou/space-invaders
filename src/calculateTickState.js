@@ -1,9 +1,21 @@
+function cloneObject(src) {
+  return JSON.parse(JSON.stringify(src));
+}
+
 function updateBullets (state) {
-  const bullets = state.bullets
+  const bullets = cloneObject(state.bullets)
 
   if (state.pressedKeys.indexOf(' ') !== -1) {
     bullets.push(createBullet(state))
   }
+
+  state.aliens.objects.forEach((alien) => {
+    state.bullets.forEach((bullet, key) => {
+      if (bulletHasHit(alien, bullet)) {
+        delete bullets[key]
+      }
+    })
+  })
 
   const bulletSpeed = 5
 
@@ -52,6 +64,13 @@ function updatePressedKeys (state) {
   })
 }
 
+function bulletHasHit (alien, bullet) {
+  const yInRange = (bullet.y - 15) < alien.y && (bullet.y + 15) > alien.y
+  const xInRange = (bullet.x - 15) < alien.x && (bullet.x + 15) > alien.x
+
+  return xInRange && yInRange
+}
+
 function updateAlienAndScore (state) {
   const {canvas, score} = state
   const {isTravelingLeft, objects} = state.aliens
@@ -74,10 +93,7 @@ function updateAlienAndScore (state) {
   let newScore = score;
   state.aliens.objects.forEach((alien, key) => {
     state.bullets.forEach((bullet) => {
-      const yInRange = (bullet.y - 15) < alien.y && (bullet.y + 15) > alien.y
-      const xInRange = (bullet.x - 15) < alien.x && (bullet.x + 15) > alien.x
-
-      if (xInRange && yInRange) {
+      if (bulletHasHit(alien, bullet)) {
         delete objects[key]
         newScore = newScore + 1
       }
