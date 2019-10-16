@@ -40,4 +40,6 @@ export default function drawState (state) {
 
   document.getElementById('score').innerText = state.score
   document.getElementById('lives').innerText = state.lives
+  document.getElementById('start').hidden = state.started
+  document.getElementById('reset').hidden = !state.started
 }

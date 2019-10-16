@@ -1,3 +1,8 @@
+$red: #880000
+$green: #43882c
+$theme: $red
+$theme-color: white
+
 @font-face
   font-family: 'VT323'
   font-style: normal
@@ -16,7 +21,7 @@ body
   overflow: hidden
 
   #gameCanvas
-    border: #880000 double 5px
+    border: $theme double 5px
     padding: 5px
     background-color: black
     width: 600px
@@ -24,3 +29,16 @@ body
     display: block
     margin: 0 auto
 
+button
+  &#reset
+    background-color: $red
+  &#start
+    background-color: $green
+
+  color: $theme-color
+  font-size: 40px
+  border: $theme-color solid 5px
+  cursor: pointer
+
+  &:active
+    border-color: darken($theme-color, 20%)
