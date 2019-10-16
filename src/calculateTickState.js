@@ -71,8 +71,10 @@ function updateAlienAndScore (state) {
   const {canvas, score, shooter} = state
   const {isTravelingLeft, objects} = state.aliens
 
-  const someHaveReachedRight = objects.some(({x}) => x >= (canvas.width - 20))
-  const someHaveReachedLeft = objects.some(({x}) => x <= 0)
+  const alienObjects = cloneObject(objects)
+
+  const someHaveReachedRight = alienObjects.some(({x}) => x >= (canvas.width - 20))
+  const someHaveReachedLeft = alienObjects.some(({x}) => x <= 0)
 
   const updatedIsTravelingLeft = (() => {
     if (isTravelingLeft && someHaveReachedLeft) {
@@ -90,34 +92,44 @@ function updateAlienAndScore (state) {
   state.aliens.objects.forEach((alien, key) => {
     state.bullets.forEach((bullet) => {
       if (hasHit(alien, bullet)) {
-        delete objects[key]
-        newScore = newScore + 1
+        delete alienObjects[key]
       }
     })
   })
 
   state.aliens.objects.forEach((alien, key) => {
     if (hasHit(alien, shooter)) {
-      delete objects[key]
+      delete alienObjects[key]
     }
   })
 
-  const someHaveReachedBottom = state.aliens.objects.some(({y}) =>  y >= (state.canvas.height - 25))
+  const someHaveReachedBottom = state.aliens.objects.some(({y}) => y >= (state.canvas.height - 25))
 
-  const countExponent = ((60 - objects.length)) / 100
+  const countExponent = ((60 - alienObjects.length)) / 100
   const alienSpeed = Math.pow(6, countExponent)
 
   return {
-    score: newScore,
-    aliens: {
-      ...state.aliens,
-      isTravelingLeft: updatedIsTravelingLeft,
-      objects: objects.filter(ifUndefined).map(({y, x}) => ({
-        y: (someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom ? y + 7 : y,
-        x: isTravelingLeft ? x - alienSpeed : x + alienSpeed
-      }))
-    }
+    ...state.aliens,
+    isTravelingLeft: updatedIsTravelingLeft,
+    objects: alienObjects.filter(ifUndefined).map(({y, x}) => ({
+      y: (someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom ? y + 7 : y,
+      x: isTravelingLeft ? x - alienSpeed : x + alienSpeed
+    }))
   }
+}
+
+function updateScore (state) {
+  let newScore = state.score
+
+  state.aliens.objects.forEach(alien => {
+    state.bullets.forEach(bullet => {
+      if (hasHit(alien, bullet)) {
+        newScore++
+      }
+    })
+  })
+
+  return newScore
 }
 
 function updateSpaceLocked ({pressedKeys}) {
@@ -133,7 +145,8 @@ export default function calculateTickState (state) {
   const shooter = updateShooter(state)
   const spaceLocked = updateSpaceLocked(state)
   const lives = updateLives(state)
-  const {aliens, score} = updateAlienAndScore(state)
+  const aliens = updateAlienAndScore(state)
+  const score = updateScore(state)
 
   return {
     ...state,
