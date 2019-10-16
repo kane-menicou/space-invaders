@@ -67,8 +67,7 @@ function ifUndefined (val) {
   return val !== undefined
 }
 
-function updateAlienAndScore (state) {
-  const {canvas, score, shooter} = state
+function updateAlienAndScore ({canvas, shooter, ...state}) {
   const {isTravelingLeft, objects} = state.aliens
 
   const alienObjects = cloneObject(objects)
@@ -88,7 +87,6 @@ function updateAlienAndScore (state) {
     return isTravelingLeft
   })()
 
-  let newScore = score
   state.aliens.objects.forEach((alien, key) => {
     state.bullets.forEach((bullet) => {
       if (hasHit(alien, bullet)) {
@@ -103,7 +101,7 @@ function updateAlienAndScore (state) {
     }
   })
 
-  const someHaveReachedBottom = state.aliens.objects.some(({y}) => y >= (state.canvas.height - 25))
+  const someHaveReachedBottom = state.aliens.objects.some(({y}) => y >= (canvas.height - 25))
 
   const countExponent = ((60 - alienObjects.length)) / 100
   const alienSpeed = Math.pow(6, countExponent)
