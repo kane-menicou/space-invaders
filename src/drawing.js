@@ -7,6 +7,13 @@ alienImage.src = alienImageSource
 const shooterImage = new Image()
 shooterImage.src = shooterImageSource
 
+function performDomUpdates (state) {
+  document.getElementById('score').innerText = state.score
+  document.getElementById('lives').innerText = state.lives
+  document.getElementById('start').hidden = state.started
+  document.getElementById('reset').hidden = !state.started
+}
+
 export default function drawState (state) {
   const canvas = document.getElementById('gameCanvas')
   const context = canvas.getContext('2d')
@@ -38,8 +45,5 @@ export default function drawState (state) {
   context.save()
   context.restore()
 
-  document.getElementById('score').innerText = state.score
-  document.getElementById('lives').innerText = state.lives
-  document.getElementById('start').hidden = state.started
-  document.getElementById('reset').hidden = !state.started
+  performDomUpdates(state)
 }

@@ -93,7 +93,9 @@ function getInitialGameState (canvas) {
   const canvas = document.getElementById('gameCanvas')
   let gameState = getInitialGameState(canvas)
 
-  let intervalHandleNumber;
+  drawState(gameState)
+
+  let intervalHandleNumber
 
   const startButton = document.getElementById('start')
   const resetButton = document.getElementById('reset')
@@ -124,9 +126,7 @@ function getInitialGameState (canvas) {
       return
     }
 
-    gameState.started = true;
-
-    drawState(gameState)
+    gameState.started = true
 
     intervalHandleNumber = setInterval(
       () => {
