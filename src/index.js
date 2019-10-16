@@ -8,6 +8,7 @@ import drawState from './drawing'
 
   let gameState = {
     score: 0,
+    lives: 3,
     shooter: {
       x: canvas.width / 2,
       y: canvas.height - 30,

@@ -39,4 +39,5 @@ export default function drawState (state) {
   context.restore()
 
   document.getElementById('score').innerText = state.score
+  document.getElementById('lives').innerText = state.lives
 }
