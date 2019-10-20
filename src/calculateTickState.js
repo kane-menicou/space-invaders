@@ -1,3 +1,5 @@
+import getAliens from './getAliens'
+
 function cloneObject (src) {
   return JSON.parse(JSON.stringify(src))
 }
@@ -106,13 +108,15 @@ function updateAlienAndScore ({canvas, shooter, ...state}) {
   const countExponent = ((60 - alienObjects.length)) / 100
   const alienSpeed = Math.pow(6, countExponent)
 
+  const movedAlienObjects = alienObjects.filter(ifUndefined).map(({y, x}) => ({
+    y: (someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom ? y + 7 : y,
+    x: isTravelingLeft ? x - alienSpeed : x + alienSpeed
+  }))
+
   return {
     ...state.aliens,
     isTravelingLeft: updatedIsTravelingLeft,
-    objects: alienObjects.filter(ifUndefined).map(({y, x}) => ({
-      y: (someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom ? y + 7 : y,
-      x: isTravelingLeft ? x - alienSpeed : x + alienSpeed
-    }))
+    objects: objects.length <= 0 ? getAliens() : movedAlienObjects
   }
 }
 
@@ -138,6 +142,10 @@ function updateLives ({lives, shooter, aliens}) {
   return aliens.objects.some((alien) => hasHit(alien, shooter)) ? lives - 1 : lives
 }
 
+function updateRound ({round, aliens}) {
+  return aliens.objects.length <= 0 ? round + 1 : round
+}
+
 export default function calculateTickState (state) {
   const bullets = updateBullets(state)
   const shooter = updateShooter(state)
@@ -145,6 +153,7 @@ export default function calculateTickState (state) {
   const lives = updateLives(state)
   const aliens = updateAlienAndScore(state)
   const score = updateScore(state)
+  const round = updateRound(state)
 
   return {
     ...state,
@@ -153,6 +162,7 @@ export default function calculateTickState (state) {
     spaceLocked,
     bullets,
     aliens,
+    round,
     score
   }
 }
