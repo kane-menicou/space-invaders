@@ -127,18 +127,10 @@ function updateAlienAndScore ({canvas, shooter, round, ...state}) {
   }
 }
 
-function updateScore (state) {
-  let newScore = state.score
+function updateScore ({score, aliens, bullets}) {
+  const killedAliens = aliens.objects.filter(alien => bullets.some(bullet => hasHit(alien, bullet)))
 
-  state.aliens.objects.forEach(alien => {
-    state.bullets.forEach(bullet => {
-      if (hasHit(alien, bullet)) {
-        newScore++
-      }
-    })
-  })
-
-  return newScore
+  return killedAliens.length + score
 }
 
 function updateSpaceLocked ({pressedKeys}) {
