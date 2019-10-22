@@ -105,8 +105,8 @@ function updateAlienAndScore ({canvas, shooter, round, ...state}) {
 
   const someHaveReachedBottom = state.aliens.objects.some(({y}) => y >= (canvas.height - 25))
 
-  const countExponent = ((60 - alienObjects.length)) / 100
-  const alienSpeed = Math.pow(6, countExponent)
+  const countExponent = ((100 - alienObjects.length)) / 100
+  const alienSpeed = Math.pow(6, countExponent) * (round / 10)
 
   const movedAlienObjects = alienObjects.filter(ifUndefined).map(({y, x}) => ({
     y: (someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom ? y + 7 : y,
