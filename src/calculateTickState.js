@@ -151,14 +151,16 @@ function updateRound ({round, aliens}) {
 }
 
 export default function calculateTickState (state) {
-  const bullets = updateBullets(state)
-  const shooter = updateShooter(state)
-  const spaceLocked = updateSpaceLocked(state)
-  const lives = updateLives(state)
-  const aliens = updateAlienAndScore(state)
-  const score = updateScore(state)
-  const round = updateRound(state)
-  const isDead = updateIsDead(state)
+  const stateClone = cloneObject(state);
+
+  const bullets = updateBullets(stateClone)
+  const shooter = updateShooter(stateClone)
+  const spaceLocked = updateSpaceLocked(stateClone)
+  const lives = updateLives(stateClone)
+  const aliens = updateAlienAndScore(stateClone)
+  const score = updateScore(stateClone)
+  const round = updateRound(stateClone)
+  const isDead = updateIsDead(stateClone)
 
   return {
     ...state,
