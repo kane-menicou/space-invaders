@@ -1,66 +1,15 @@
-export default function getAliens () {
-  return [
-    {x: 30, y: 1},
-    {x: 50, y: 1},
-    {x: 70, y: 1},
-    {x: 90, y: 1},
-    {x: 110, y: 1},
-    {x: 130, y: 1},
-    {x: 150, y: 1},
-    {x: 170, y: 1},
-    {x: 190, y: 1},
-    {x: 210, y: 1},
-    {x: 230, y: 1},
-    {x: 250, y: 1},
-    {x: 270, y: 1},
-    {x: 290, y: 1},
-    {x: 310, y: 1},
-    {x: 330, y: 1},
-    {x: 350, y: 1},
-    {x: 370, y: 1},
-    {x: 390, y: 1},
-    {x: 410, y: 1},
+const aliensPerRow = 15
+const alienXSpace = 25
+const alienYSpace = 25
 
-    {x: 30, y: 20},
-    {x: 50, y: 20},
-    {x: 70, y: 20},
-    {x: 90, y: 20},
-    {x: 110, y: 20},
-    {x: 130, y: 20},
-    {x: 150, y: 20},
-    {x: 170, y: 20},
-    {x: 190, y: 20},
-    {x: 210, y: 20},
-    {x: 230, y: 20},
-    {x: 250, y: 20},
-    {x: 270, y: 20},
-    {x: 290, y: 20},
-    {x: 310, y: 20},
-    {x: 330, y: 20},
-    {x: 350, y: 20},
-    {x: 370, y: 20},
-    {x: 390, y: 20},
-    {x: 410, y: 20},
+export default function getAliens (forRound = 1) {
+  return [...new Array(forRound * aliensPerRow)].map((_, index) => {
 
-    {x: 30, y: 40},
-    {x: 50, y: 40},
-    {x: 70, y: 40},
-    {x: 90, y: 40},
-    {x: 110, y: 40},
-    {x: 130, y: 40},
-    {x: 150, y: 40},
-    {x: 170, y: 40},
-    {x: 190, y: 40},
-    {x: 210, y: 40},
-    {x: 230, y: 40},
-    {x: 250, y: 40},
-    {x: 270, y: 40},
-    {x: 290, y: 40},
-    {x: 310, y: 40},
-    {x: 330, y: 40},
-    {x: 350, y: 40},
-    {x: 370, y: 40},
-    {x: 390, y: 40},
-    {x: 410, y: 40},
-  ]
+    // Add a one here to ensure that 0 is not divided out.
+    const currentRow = Math.ceil((index + 1) / aliensPerRow) - 1
+    const y = currentRow * alienYSpace
+    const x = (index * alienXSpace) - (currentRow * (aliensPerRow * alienXSpace))
+
+    return {x, y}
+  })
 }

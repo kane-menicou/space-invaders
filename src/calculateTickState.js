@@ -69,7 +69,7 @@ function ifUndefined (val) {
   return val !== undefined
 }
 
-function updateAlienAndScore ({canvas, shooter, ...state}) {
+function updateAlienAndScore ({canvas, shooter, round, ...state}) {
   const {isTravelingLeft, objects} = state.aliens
 
   const alienObjects = cloneObject(objects)
@@ -116,7 +116,7 @@ function updateAlienAndScore ({canvas, shooter, ...state}) {
   return {
     ...state.aliens,
     isTravelingLeft: updatedIsTravelingLeft,
-    objects: objects.length <= 0 ? getAliens() : movedAlienObjects
+    objects: objects.length <= 0 ? getAliens(round) : movedAlienObjects
   }
 }
 
