@@ -9,6 +9,7 @@ function getInitialGameState (canvas) {
     score: 0,
     lives: 3,
     round: 1,
+    isDead: false,
     shooter: {
       x: canvas.width / 2,
       y: canvas.height - 30,

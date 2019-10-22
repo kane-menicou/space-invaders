@@ -4,6 +4,10 @@ function cloneObject (src) {
   return JSON.parse(JSON.stringify(src))
 }
 
+function updateIsDead ({ lives }) {
+  return lives <= 0
+}
+
 function updateBullets (state) {
   const bullets = cloneObject(state.bullets)
 
@@ -154,13 +158,16 @@ export default function calculateTickState (state) {
   const aliens = updateAlienAndScore(state)
   const score = updateScore(state)
   const round = updateRound(state)
+  const isDead = updateIsDead(state)
 
   return {
     ...state,
     shooter,
     lives,
+    started: !isDead,
     spaceLocked,
     bullets,
+    isDead,
     aliens,
     round,
     score

@@ -22,6 +22,18 @@ export default function drawState (state) {
   // Clear old drawings
   context.clearRect(0, 0, canvas.width, canvas.height)
 
+  performDomUpdates(state)
+
+  if (state.isDead) {
+    context.fillStyle = '#ff0000'
+    context.font = '50px VT323'
+    context.fillText(`You're dead!`, 10, 50)
+    context.fillText(`Score: ${state.score}`, 10, 110)
+    context.fillText(`Round: ${state.round}`, 10, 160)
+
+    return;
+  }
+
   // Draw shooter
   context.beginPath()
   context.drawImage(shooterImage, state.shooter.x, state.shooter.y, 25, 25)
@@ -45,6 +57,4 @@ export default function drawState (state) {
 
   context.save()
   context.restore()
-
-  performDomUpdates(state)
 }
