@@ -4,7 +4,7 @@ function cloneObject (src) {
   return JSON.parse(JSON.stringify(src))
 }
 
-function updateIsDead ({ lives }) {
+function updateIsDead ({lives}) {
   return lives <= 0
 }
 
@@ -25,7 +25,10 @@ function updateBullets (state) {
 
   const bulletSpeed = 7
 
-  return bullets.filter(ifUndefined).map(({y, ...bullet}) => ({...bullet, y: y - bulletSpeed})).filter(({y}) => y > 0)
+  return bullets
+    .filter(ifUndefined)
+    .map(({y, ...bullet}) => ({...bullet, y: y - bulletSpeed}))
+    .filter(({y}) => y > 0)
 }
 
 function updateShooter (state) {
@@ -151,7 +154,7 @@ function updateRound ({round, aliens}) {
 }
 
 export default function calculateTickState (state) {
-  const stateClone = cloneObject(state);
+  const stateClone = cloneObject(state)
 
   const bullets = updateBullets(stateClone)
   const shooter = updateShooter(stateClone)
