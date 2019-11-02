@@ -3,6 +3,7 @@ import { onKeyDown, onKeyUp } from './keyHandlers'
 import './style.sass'
 import drawState from './drawing'
 import getAliens from './getAliens'
+import randomNumber from './statistic'
 
 function getInitialGameState (canvas) {
   return {
@@ -14,6 +15,7 @@ function getInitialGameState (canvas) {
       x: canvas.width / 2,
       y: canvas.height - 30,
     },
+    motherships: [],
     started: false,
     pressedKeys: [],
     canvas: {
@@ -70,7 +72,9 @@ function getInitialGameState (canvas) {
 
     intervalHandleNumber = setInterval(
       () => {
-        gameState = calculateTickState(gameState)
+        const shouldAddNewMothership = randomNumber(100) === 0
+
+        gameState = calculateTickState(gameState, shouldAddNewMothership)
 
         drawState(gameState)
       },

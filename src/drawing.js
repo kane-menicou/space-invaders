@@ -1,11 +1,15 @@
 import alienImageSource from './alien.png'
 import shooterImageSource from './shooter.png'
+import mothershipImageSource from './mothership.png'
 
 const alienImage = new Image()
 alienImage.src = alienImageSource
 
 const shooterImage = new Image()
 shooterImage.src = shooterImageSource
+
+const mothershipImage = new Image()
+mothershipImage.src = mothershipImageSource
 
 function performDomUpdates (state) {
   document.getElementById('score').innerText = state.score
@@ -43,6 +47,13 @@ export default function drawState (state) {
 
   state.aliens.objects.map(({x, y}) => {
     context.drawImage(alienImage, x, y, 25, 25)
+  })
+
+  context.save()
+  context.restore()
+
+  state.motherships.map(({x, y}) => {
+    context.drawImage(mothershipImage, x, y, 25, 25)
   })
 
   context.save()

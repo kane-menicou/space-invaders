@@ -127,10 +127,11 @@ function updateAlienAndScore ({canvas, shooter, round, ...state}) {
   }
 }
 
-function updateScore ({score, aliens, bullets}) {
+function updateScore ({score, aliens, bullets, motherships}) {
   const killedAliens = aliens.objects.filter(alien => bullets.some(bullet => hasHit(alien, bullet)))
+  const killedMotherships = motherships.filter(mothership => bullets.some(bullet => hasHit(mothership, bullet)))
 
-  return killedAliens.length + score
+  return killedAliens.length + (killedMotherships.length * 20) + score
 }
 
 function updateSpaceLocked ({pressedKeys}) {
@@ -145,7 +146,18 @@ function updateRound ({round, aliens}) {
   return aliens.objects.length <= 0 ? round + 1 : round
 }
 
-export default function calculateTickState (state) {
+function updateMotherships ({motherships, canvas, bullets}, newMothership) {
+  const mothershipSpeed = 1.5
+
+  if (newMothership) {
+    motherships.push({x: 0, y: 10})
+  }
+  return motherships
+    .map(({x, ...rest}) => ({x: x + mothershipSpeed, ...rest}))
+    .filter((mothership) => mothership.x < canvas.width && !bullets.some(bullet => hasHit(bullet, mothership)))
+}
+
+export default function calculateTickState (state, newMothership) {
   const stateClone = cloneObject(state)
 
   const bullets = updateBullets(stateClone)
@@ -156,6 +168,7 @@ export default function calculateTickState (state) {
   const score = updateScore(stateClone)
   const round = updateRound(stateClone)
   const isDead = updateIsDead(stateClone)
+  const motherships = updateMotherships(stateClone, newMothership)
 
   return {
     ...state,
@@ -167,6 +180,7 @@ export default function calculateTickState (state) {
     isDead,
     aliens,
     round,
-    score
+    score,
+    motherships
   }
 }
