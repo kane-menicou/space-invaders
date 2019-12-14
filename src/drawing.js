@@ -1,6 +1,20 @@
 import alienImageSource from './alien.png'
 import shooterImageSource from './shooter.png'
 import mothershipImageSource from './mothership.png'
+import {
+  alienHeight,
+  alienWidth,
+  bulletColour,
+  bulletHeight,
+  bulletWidth,
+  finalScreenFont,
+  finalScreenText,
+  finalScreenTextColour,
+  mothershipHeight,
+  mothershipWidth,
+  shooterHeight,
+  shooterWidth
+} from './settings'
 
 const alienImage = new Image()
 alienImage.src = alienImageSource
@@ -29,39 +43,39 @@ export default function drawState (state) {
   performDomUpdates(state)
 
   if (state.isDead) {
-    context.fillStyle = '#ff0000'
-    context.font = '50px VT323'
-    context.fillText(`You're dead!`, 10, 50)
+    context.fillStyle = finalScreenTextColour
+    context.font = finalScreenFont
+    context.fillText(finalScreenText, 10, 50)
     context.fillText(`Score: ${state.score}`, 10, 110)
     context.fillText(`Round: ${state.round}`, 10, 160)
 
-    return;
+    return
   }
 
   // Draw shooter
   context.beginPath()
-  context.drawImage(shooterImage, state.shooter.x, state.shooter.y, 25, 25)
+  context.drawImage(shooterImage, state.shooter.x, state.shooter.y, shooterWidth, shooterHeight)
 
   context.save()
   context.restore()
 
   state.aliens.objects.map(({x, y}) => {
-    context.drawImage(alienImage, x, y, 25, 25)
+    context.drawImage(alienImage, x, y, alienWidth, alienHeight)
   })
 
   context.save()
   context.restore()
 
   state.motherships.map(({x, y}) => {
-    context.drawImage(mothershipImage, x, y, 25, 25)
+    context.drawImage(mothershipImage, x, y, mothershipWidth, mothershipHeight)
   })
 
   context.save()
   context.restore()
 
   state.bullets.map(({x, y}) => {
-    context.rect(x, y, 2, 10)
-    context.fillStyle = '#d8222c'
+    context.rect(x, y, bulletWidth, bulletHeight)
+    context.fillStyle = bulletColour
     context.fill()
     context.closePath()
   })

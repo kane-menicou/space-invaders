@@ -1,4 +1,18 @@
 import getAliens from './getAliens'
+import {
+  alienHeight,
+  alienKillPoints,
+  alienWidth,
+  alienYMovement,
+  bulletSpeed,
+  canvasBottomAlienOffset,
+  mothershipKillPoints,
+  mothershipSpeed, mothershipTopOffset,
+  rightCanvasOffset,
+  shooterSpeed,
+  shooterXOffset,
+  shooterYOffset
+} from './settings'
 
 function cloneObject (src) {
   return JSON.parse(JSON.stringify(src))
@@ -23,8 +37,6 @@ function updateBullets (state) {
     })
   })
 
-  const bulletSpeed = 7
-
   return bullets
     .filter(ifUndefined)
     .map(({y, ...bullet}) => ({...bullet, y: y - bulletSpeed}))
@@ -35,11 +47,11 @@ function updateShooter (state) {
   const newState = {...state}
 
   if (state.pressedKeys.indexOf('A') !== -1) {
-    newState.shooter = moveShooterX(newState, 3)
+    newState.shooter = moveShooterX(newState, shooterSpeed)
   }
 
   if (state.pressedKeys.indexOf('D') !== -1) {
-    newState.shooter = moveShooterX(newState, -3)
+    newState.shooter = moveShooterX(newState, -shooterSpeed)
   }
 
   return newState.shooter
@@ -47,15 +59,15 @@ function updateShooter (state) {
 
 function createBullet (state) {
   return {
-    x: state.shooter.x + (25 / 2),
-    y: state.shooter.y + 1,
+    x: state.shooter.x + shooterXOffset,
+    y: state.shooter.y + shooterYOffset,
   }
 }
 
 function moveShooterX (state, by) {
   const x = state.shooter.x - by
 
-  if (x <= 0 || x >= (state.canvas.width - 20)) {
+  if (x <= 0 || x >= (state.canvas.width - rightCanvasOffset)) {
     return state.shooter
   }
 
@@ -66,8 +78,8 @@ function moveShooterX (state, by) {
 }
 
 function hasHit (obj1, obj2) {
-  const yInRange = (obj2.y - 15) < obj1.y && (obj2.y + 15) > obj1.y
-  const xInRange = (obj2.x - 15) < obj1.x && (obj2.x + 15) > obj1.x
+  const yInRange = (obj2.y - alienHeight) < obj1.y && (obj2.y + alienHeight) > obj1.y
+  const xInRange = (obj2.x - alienWidth) < obj1.x && (obj2.x + alienWidth) > obj1.x
 
   return xInRange && yInRange
 }
@@ -81,7 +93,7 @@ function updateAlienAndScore ({canvas, shooter, round, ...state}) {
 
   const alienObjects = cloneObject(objects)
 
-  const someHaveReachedRight = alienObjects.some(({x}) => x >= (canvas.width - 20))
+  const someHaveReachedRight = alienObjects.some(({x}) => x >= (canvas.width - rightCanvasOffset))
   const someHaveReachedLeft = alienObjects.some(({x}) => x <= 0)
 
   const updatedIsTravelingLeft = (() => {
@@ -110,13 +122,13 @@ function updateAlienAndScore ({canvas, shooter, round, ...state}) {
     }
   })
 
-  const someHaveReachedBottom = state.aliens.objects.some(({y}) => y >= (canvas.height - 25))
+  const someHaveReachedBottom = state.aliens.objects.some(({y}) => y >= (canvas.height - canvasBottomAlienOffset))
 
   const countExponent = ((100 - alienObjects.length)) / 100
   const alienSpeed = Math.pow(6, countExponent) * (round / 10)
 
   const movedAlienObjects = alienObjects.filter(ifUndefined).map(({y, x}) => ({
-    y: (someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom ? y + 7 : y,
+    y: ((someHaveReachedRight || someHaveReachedLeft) && !someHaveReachedBottom) ? y + alienYMovement : y,
     x: isTravelingLeft ? x - alienSpeed : x + alienSpeed
   }))
 
@@ -131,7 +143,7 @@ function updateScore ({score, aliens, bullets, motherships}) {
   const killedAliens = aliens.objects.filter(alien => bullets.some(bullet => hasHit(alien, bullet)))
   const killedMotherships = motherships.filter(mothership => bullets.some(bullet => hasHit(mothership, bullet)))
 
-  return killedAliens.length + (killedMotherships.length * 20) + score
+  return (killedAliens.length * alienKillPoints) + (killedMotherships.length * mothershipKillPoints) + score
 }
 
 function updateSpaceLocked ({pressedKeys}) {
@@ -147,11 +159,10 @@ function updateRound ({round, aliens}) {
 }
 
 function updateMotherships ({motherships, canvas, bullets}, newMothership) {
-  const mothershipSpeed = 1.5
-
   if (newMothership) {
-    motherships.push({x: 0, y: 10})
+    motherships.push({x: 0, y: mothershipTopOffset})
   }
+
   return motherships
     .map(({x, ...rest}) => ({x: x + mothershipSpeed, ...rest}))
     .filter((mothership) => mothership.x < canvas.width && !bullets.some(bullet => hasHit(bullet, mothership)))
