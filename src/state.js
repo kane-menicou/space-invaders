@@ -1,4 +1,3 @@
-import './style.sass'
 import { getAliens, getBlock } from './getObjects'
 
 export default function getInitial (canvas) {
@@ -19,8 +18,8 @@ export default function getInitial (canvas) {
       height: canvas.height,
     },
     blocks: [
-      getBlock(50, 50, 50, 50),
-      getBlock(100, 100, 100, 50)
+      getBlock(50, canvas.height - 100, 50, 50),
+      getBlock(300, canvas.height - 100, 100, 50)
     ],
     spaceLocked: false,
     bullets: [],
