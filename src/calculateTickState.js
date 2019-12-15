@@ -1,4 +1,4 @@
-import getAliens from './getAliens'
+import { getAliens } from './getObjects'
 import {
   alienHeight,
   alienKillPoints,

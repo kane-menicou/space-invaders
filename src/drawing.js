@@ -33,53 +33,76 @@ function performDomUpdates (state) {
   document.getElementById('reset').hidden = !state.started
 }
 
-export default function drawState (state) {
-  const canvas = document.getElementById('gameCanvas')
-  const context = canvas.getContext('2d')
+export default function getFunctionToDrawState (state) {
+  return () => {
+    const canvas = document.getElementById('gameCanvas')
+    const context = canvas.getContext('2d')
 
-  // Clear old drawings
-  context.clearRect(0, 0, canvas.width, canvas.height)
+    // Clear old drawings
+    context.clearRect(0, 0, canvas.width, canvas.height)
 
-  performDomUpdates(state)
+    performDomUpdates(state)
 
-  if (state.isDead) {
-    context.fillStyle = finalScreenTextColour
-    context.font = finalScreenFont
-    context.fillText(finalScreenText, 10, 50)
-    context.fillText(`Score: ${state.score}`, 10, 110)
-    context.fillText(`Round: ${state.round}`, 10, 160)
+    if (state.isDead) {
+      context.fillStyle = finalScreenTextColour
+      context.font = finalScreenFont
+      context.fillText(finalScreenText, 10, 50)
+      context.fillText(`Score: ${state.score}`, 10, 110)
+      context.fillText(`Round: ${state.round}`, 10, 160)
 
-    return
+      return
+    }
+
+    function performAndSave (callback) {
+      callback()
+
+      context.save()
+      context.restore()
+    }
+
+    performAndSave(() => {
+      // Draw shooter
+      context.beginPath()
+      context.drawImage(shooterImage, state.shooter.x, state.shooter.y, shooterWidth, shooterHeight)
+    })
+
+    performAndSave(() => {
+      state.aliens.objects.map(({x, y}) => {
+        context.drawImage(alienImage, x, y, alienWidth, alienHeight)
+      })
+    })
+
+    performAndSave(() => {
+      state.motherships.map(({x, y}) => {
+        context.drawImage(mothershipImage, x, y, mothershipWidth, mothershipHeight)
+      })
+    })
+
+    performAndSave(() => {
+      state.bullets.map(({x, y}) => {
+        context.rect(x, y, bulletWidth, bulletHeight)
+        context.fillStyle = bulletColour
+        context.fill()
+        context.closePath()
+      })
+    })
+
+    performAndSave(() => {
+      state.blocks.map(block => {
+        const greatestY = block.reduce((previous, current) => current.y > previous.y ? current : previous).y
+        const lowestY = block.reduce((previous, current) => current.y < previous.y ? current : previous).y
+        const greatestX = block.reduce((previous, current) => current.x > previous.x ? current : previous).x
+        const lowestX = block.reduce((previous, current) => current.x < previous.x ? current : previous).x
+
+        const width = greatestX - lowestX
+        const height = greatestY - lowestY
+
+        context.rect(lowestX, lowestY, width, height)
+
+        context.fillStyle = bulletColour
+        context.fill()
+        context.closePath()
+      })
+    })
   }
-
-  // Draw shooter
-  context.beginPath()
-  context.drawImage(shooterImage, state.shooter.x, state.shooter.y, shooterWidth, shooterHeight)
-
-  context.save()
-  context.restore()
-
-  state.aliens.objects.map(({x, y}) => {
-    context.drawImage(alienImage, x, y, alienWidth, alienHeight)
-  })
-
-  context.save()
-  context.restore()
-
-  state.motherships.map(({x, y}) => {
-    context.drawImage(mothershipImage, x, y, mothershipWidth, mothershipHeight)
-  })
-
-  context.save()
-  context.restore()
-
-  state.bullets.map(({x, y}) => {
-    context.rect(x, y, bulletWidth, bulletHeight)
-    context.fillStyle = bulletColour
-    context.fill()
-    context.closePath()
-  })
-
-  context.save()
-  context.restore()
 }

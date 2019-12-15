@@ -10,6 +10,7 @@ module.exports = {
   mothershipKillPoints: 20,
   alienKillPoints: 1,
   mothershipSpeed: 1.5,
+  canvasLeftAlienOffset: 25,
   canvasBottomAlienOffset: 25,
   mothershipTopOffset: 10,
   shooterWidth: 25,
@@ -22,4 +23,9 @@ module.exports = {
   finalScreenTextColour: '#ff0000',
   finalScreenFont: '50px VT323',
   finalScreenText: `You're dead!`,
+  aliensPerRow: 15,
+  alienXSpace: 25,
+  alienYSpace: 25,
+  yStart: 25,
+  frameEveryMs: 20
 }
